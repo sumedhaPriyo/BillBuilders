@@ -23,6 +23,9 @@ import {
 import CustomHeader from '../../components/CustomHeader';
 import CustomButton from '../../components/CustomButton';
 import CustomCheckbox from '../../components/CustomCheckbox';
+import { ToastNotification } from '../../utility/ToastNotification';
+import { ALERT_TYPE } from 'react-native-alert-notification';
+import { loginUser } from '../../firebaseService/AuthServices';
 
 interface LoginScreenProps {
   navigation?: any;
@@ -85,10 +88,35 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     );
 
     if (!emailValid || !passwordValid) {
+      console.log(' Login Validation failed:');
+
       return;
     }
+    try {
+      setLoading(true);
+      const response = await loginUser(emailValue, password);
 
-    setLoading(true);
+      if (response.success) {
+        console.log('Login successful:', response.user);
+        ToastNotification(
+          ALERT_TYPE.SUCCESS,
+          'Success',
+          ' User Login Successful!',
+        );
+      } else {
+        console.log('Login failed', response.error);
+        ToastNotification(
+          ALERT_TYPE.DANGER,
+          'auth/invalid-credential',
+          'User Not Register',
+        );
+      }
+    } catch (err) {
+      setLoading(false);
+      console.log(err, 'login error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -139,7 +167,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               <Text style={styles.rememberMeText}>Remember Me</Text>
             </View>
             <TouchableOpacity
-              onPress={() => navigation?.navigate('Forgetpassword')}
+              onPress={() => navigation?.navigate('ForgetPassword')}
             >
               <Text style={styles.forgotPasswordLink}>Forgot Password?</Text>
             </TouchableOpacity>
