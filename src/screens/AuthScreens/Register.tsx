@@ -273,7 +273,7 @@ const Register: React.FC<RegisterProps> = ({ navigation }) => {
           <Image source={icons.Facebook} style={styles.socialIcon} />
         </View>
         <Text style={styles.footerText}>
-          By signing up you agree to our Terms and Conditions of Use
+          By Signing up you agree to our Terms and Conditions of Use
         </Text>
       </ScrollView>
     </SafeAreaView>
